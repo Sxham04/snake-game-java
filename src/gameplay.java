@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.Font;
 
-public class gameplay extends JPanel implements KeyListener, ActionListener {
+public class Gameplay extends JPanel implements KeyListener, ActionListener {
     // instansiasi objek snake
     Snake snake = new Snake();
 
@@ -55,7 +55,7 @@ public class gameplay extends JPanel implements KeyListener, ActionListener {
     private ImageIcon arrowImage;
     private ImageIcon shiftImage;
 
-    public gameplay() {
+    public Gameplay() {
         // buat pas mulai gamenya
         addKeyListener(this);
         setFocusable(true);
