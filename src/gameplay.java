@@ -1,27 +1,26 @@
 package proj.snake.src;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.KeyListener;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.Font;
-
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
-    // instansiasi objek snake
+    // instantiate snake object
     Snake snake = new Snake();
 
-    // instansiasi objek apple
+    // instantiate apple object
     Apple apple = new Apple();
 
-    // buat gambar kepala
+    // create snake head image
     private ImageIcon snakeHead;
 
     private Timer timer;
@@ -30,33 +29,33 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     AtomicBoolean speedUp = new AtomicBoolean(true);
 
-    // koordinat letak kepala ular
+    // snake head position coordinates
     private int snakeHeadXPos = 379;
 
-    // Buat gambar apple
+    // Create apple image
     private ImageIcon appleImage;
 
-    // Untuk generate random number
+    // For generating random number
     private Random random = new Random();
 
     private int xPos = random.nextInt(100);
     private int yPos = random.nextInt(100);
 
-    // Buat tittle game
+    // Create game title
     private ImageIcon titleImage;
 
-    // Buat score game
+    // Create game score
     Score score = new Score();
 
-    // Buat Highscore
+    // Create Highscore
     private String highScore;
 
-    // Untuk tampilin controller
+    // For displaying controller
     private ImageIcon arrowImage;
     private ImageIcon shiftImage;
 
     public Gameplay() {
-        // buat pas mulai gamenya
+        // for when the game starts
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -65,7 +64,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     }
 
     public void paint(Graphics g) {
-        // cek jika game udah dimulai
+        // check if the game has started
         if (snake.moves == 0) {
             for (int i = 0; i < 5; i++) {
                 snake.snakexLength[i] = snakeHeadXPos;
@@ -74,43 +73,43 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             }
         }
 
-        // border judul
+        // title border
         g.setColor(Color.WHITE);
         g.drawRect(24, 10, 852, 55);
 
-        // judul
+        // title
         titleImage = new ImageIcon("images/title.png");
         titleImage.paintIcon(this, g, 25, 11);
 
-        // border untuk gameplay
+        // border for gameplay
         g.setColor(Color.WHITE);
         g.drawRect(24, 71, 620, 614);
 
-        // background gameplay
+        // gameplay background
         g.setColor(Color.black);
         g.fillRect(25, 72, 619, 613);
 
-        // border untuk leaderboard
+        // border for leaderboard
         g.setColor(Color.WHITE);
         g.drawRect(653, 71, 223, 614);
 
-        // background leaderboard
+        // leaderboard background
         g.setColor(Color.black);
         g.fillRect(654, 72, 221, 613);
 
-        // Tampilin Score
+        // Display Score
         g.setColor(Color.white);
         g.setFont(new Font("Helvetica", Font.BOLD, 20));
         g.drawString("SCORE : " + score.getScore(), 720, 110);
         g.drawRect(653, 130, 221, 1);
 
-        // Tampilin HighScore
+        // Display HighScore
         score.sortHighScore();
         highScore = score.getHighScore();
         g.drawString("HIGHSCORE", 705, 180);
         drawString(g, highScore, 705, 200);
 
-        // Tampilin Controller
+        // Display Controller
         g.drawRect(653, 490, 221, 1);
         g.setFont(new Font("Helvetica", Font.BOLD, 25));
         g.drawString("CONTROLS", 690, 530);
@@ -124,7 +123,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         shiftImage.paintIcon(this, g, 695, 625);
         g.drawString("Boost", 770, 640);
 
-        // instansiasi gambar buat kepala ular
+        // instantiate image for snake head
         snakeHead = new ImageIcon("images/snakeHead4.png");
         snakeHead.paintIcon(this, g, snake.snakexLength[0], snake.snakeyLength[0]);
 
@@ -141,14 +140,14 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
         appleImage = new ImageIcon("images/apple4.png");
 
-        // Jika snakeya makan apllenya
+        // If the snake eats the apple
         if ((apple.applexPos[xPos]) == snake.snakexLength[0] && (apple.appleyPos[yPos] == snake.snakeyLength[0])) {
             snake.lengthOfSnake++;
             score.increaseScore();
             xPos = random.nextInt(100);
             yPos = random.nextInt(100);
 
-            // mempercepat gerakan ular tiap kali skor mencapai kelipatan 10
+            // speed up the snake's movement every time the score reaches a multiple of 5
             if (score.getScore() % 5 == 0 && score.getScore()!= 0){
                 if(delay > 100){
                     delay = delay - 100;
@@ -166,43 +165,43 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             }
         }
 
-        // Sebelum user mencet spacebar, apllenya ga keliatan
+        // Before the user presses the spacebar, the apple is not visible
         if (snake.moves != 0) {
             appleImage.paintIcon(this, g, apple.applexPos[xPos], apple.appleyPos[yPos]);
         }
 
-        // menampilkan tulisan "Press Spacebar to Start the Game!"
+        // display the text "Press Spacebar to Start the Game!"
         if (snake.moves == 0) {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Courier New", Font.BOLD, 26));
             g.drawString("Press Spacebar to Start the Game!", 70, 300);
         }
 
-        // Cek jika kepala menabrak badan
+        // Check if the head hits the body
         for (int i = 1; i < snake.lengthOfSnake; i++) {
-            // jika tabrakan terjadi
+            // if collision occurs
             if (snake.snakexLength[i] == snake.snakexLength[0] && snake.snakeyLength[i] == snake.snakeyLength[0]) {
-                // panggil function dead
+                // call dead function
                 snake.dead();
             }
         }
 
-        // Cek jika mati
+        // Check if dead
         if (snake.death) {
-            // Save Scorenya ke file highscore.dat
+            // Save the Score to the highscore.dat file
             score.saveNewScore();
 
-            // menampilkan tulisan "Game Over!"
+            // display the text "Game Over!"
             g.setColor(Color.RED);
             g.setFont(new Font("Courier New", Font.BOLD, 50));
             g.drawString("Game Over!", 190, 340);
 
-            // menampilkan score
+            // display score
             g.setColor(Color.GREEN);
             g.setFont(new Font("Courier New", Font.BOLD, 18));
             g.drawString("Your Score : " + score.getScore(), 250, 370);
 
-            // menampilkan tulisan "Press Spacebar to restart!"
+            // display the text "Press Spacebar to restart!"
             g.setColor(Color.WHITE);
             g.setFont(new Font("Courier New", Font.BOLD, 20));
             g.drawString("Press Spacebar to restart!", 187, 400);
@@ -210,7 +209,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         g.dispose();
     }
 
-    // Void untuk menampilkan di layar string dengan \n di dalamnya
+    // Void for displaying a string with \n on the screen
     public void drawString(Graphics g, String text, int x, int y) {
         for (String line : text.split("\n"))
             g.drawString(line, x, y += g.getFontMetrics().getHeight());
@@ -221,33 +220,33 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         // TODO Auto-generated method stub
         timer.start();
 
-        // untuk pergerakan ular
-        // menggerakkan ular ke kanan
+        // for snake movement
+        // move snake to the right
         if (snake.right) {
-            // panggil fungsi pada class Snake untuk menggerakkan ular ke kanan
+            // call function in Snake class to move the snake to the right
             snake.movementRight();
-            // panggil kembali method paint secara otomatis
+            // automatically call the paint method again
             repaint();
         }
-        // menggerakkan ular ke kiri
+        // move snake to the left
         if (snake.left) {
-            // panggil fungsi pada class Snake untuk menggerakkan ular ke kiri
+            // call function in Snake class to move the snake to the left
             snake.movementLeft();
-            // panggil kembali method paint secara otomatis
+            // automatically call the paint method again
             repaint();
         }
-        // menggerakkan ular ke atas
+        // move snake upwards
         if (snake.up) {
-            // panggil fungsi pada class Snake untuk menggerakkan ular ke atas
+            // call function in Snake class to move the snake upwards
             snake.movementUp();
-            // panggil kembali method paint secara otomatis
+            // automatically call the paint method again
             repaint();
         }
-        // menggerakkan ular ke bawah
+        // move snake downwards
         if (snake.down) {
-            // panggil fungsi pada class Snake untuk menggerakkan ular ke bawah
+            // call function in Snake class to move the snake downwards
             snake.movementDown();
-            // panggil kembali method paint secara otomatis
+            // automatically call the paint method again
             repaint();
         }
     }
@@ -260,9 +259,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // kondisi penekanan tombol
+        // key press condition
         switch (e.getKeyCode()) {
-            // jika user tekan shift
+            // if user presses shift
             case KeyEvent.VK_SHIFT:
                 if (speedUp.compareAndSet(true, false)) {
                     if (delay > 100) {
@@ -273,14 +272,14 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                     }
                 }
                 break;
-            // jika user tekan spasi
+            // if user presses space
             case KeyEvent.VK_SPACE:
-                // Untuk mulai game
+                // To start the game
                 if (snake.moves == 0) {
                     snake.moves++;
                     snake.right = true;
                 }
-                // Untuk restart game abis mati
+                // To restart the game after death
                 if (snake.death) {
                     snake.moves = 0;
                     snake.lengthOfSnake = 5;
@@ -289,24 +288,24 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                     snake.death = false;
                 }
                 break;
-            // jika user tekan arrow right
+            // if user presses right arrow
             case KeyEvent.VK_RIGHT:
-                // panggil fungsi pada class Snake untuk gerak ke kanan
+                // call function in Snake class to move right
                 snake.moveRight();
                 break;
-            // jika user tekan arrow left
+            // if user presses left arrow
             case KeyEvent.VK_LEFT:
-                // panggil fungsi pada class Snake untuk gerak ke kiri
+                // call function in Snake class to move left
                 snake.moveLeft();
                 break;
-            // jika user tekan arrow up
+            // if user presses up arrow
             case KeyEvent.VK_UP:
-                // panggil fungsi pada class Snake untuk gerak ke atas
+                // call function in Snake class to move up
                 snake.moveUp();
                 break;
-            // jika user tekan arrow down
+            // if user presses down arrow
             case KeyEvent.VK_DOWN:
-                // panggil fungsi pada class Snake untuk gerak ke bawah
+                // call function in Snake class to move down
                 snake.moveDown();
                 break;
         }
@@ -314,7 +313,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // Jika user lepas shift
+        // If user releases shift
         if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
             speedUp.set(true);
             timer.setDelay(delay);
